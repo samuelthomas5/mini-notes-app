@@ -2,6 +2,15 @@ from flask import Flask, redirect, render_template, request
 
 app = Flask(__name__)
 
+def mock_summarise(text):
+    """
+    Demo AI summarisation function.
+    
+    """
+    sentences = text.split(".")
+    summary = sentences[0] if sentences else text
+    return f"Summary: {summary.strip()}..."
+
 @app.route('/', methods=["GET", "POST"])
 def index():
     if request.method == "POST":
