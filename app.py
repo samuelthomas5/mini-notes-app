@@ -13,10 +13,17 @@ def mock_summarise(text):
 
 @app.route('/', methods=["GET", "POST"])
 def index():
+    summary = None
+
     if request.method == "POST":
         note =request.form["note"]
-        with open("notes.txt", "a") as f:
-            f.write(note + "\n")
+        action = request.form.get("action")
+
+        if action == "save":
+            with open("notes.txt", "a") as f:
+                f.write(note + "\n")
+        elif action == "Summarise":
+            summary = mock_summarise(note)
         return redirect("/")
 
     notes = []
@@ -26,7 +33,7 @@ def index():
             notes = f.readlines()
     except FileNotFoundError:
         pass
-    return render_template("index.html", notes=notes)
+    return render_template("index.html", notes=notes, summary=summary)
 
 if __name__ == "__main__":
     app.run(debug=True)
