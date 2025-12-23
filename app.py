@@ -1,38 +1,40 @@
-from flask import Flask, redirect, render_template, request
+from flask import Flask, render_template, request, redirect
 
 app = Flask(__name__)
 
-def mock_summarise(text):
-    """
-    Demo AI summarisation function.
-    
-    """
+# Mock AI summarization
+def mock_summarize(text):
     sentences = text.split(".")
-    summary = sentences[0] if sentences else text
-    return f"Summary: {summary.strip()}..."
+    return sentences[0].strip() + "..." if sentences[0] else "No text to summarize"
 
-@app.route('/', methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 def index():
-    summary = None
+    summary = None  # default
 
-    if request.method == "POST":
-        note =request.form["note"]
-        action = request.form.get("action")
-
-        if action == "save":
-            with open("notes.txt", "a") as f:
-                f.write(note + "\n")
-        elif action == "Summarise":
-            summary = mock_summarise(note)
-        return redirect("/")
-
+    # Load all notes first
     notes = []
-
     try:
-        with open("notes.txt") as f:
-            notes = f.readlines()
+        with open("notes.txt", "r", encoding="utf-8") as f:
+            notes = [n.strip() for n in f.readlines() if n.strip()]
     except FileNotFoundError:
         pass
+
+    if request.method == "POST":
+        note = request.form.get("note", "").strip()
+        action = request.form.get("action")  # save or summarize
+
+        if action == "save":
+            if note:
+                with open("notes.txt", "a", encoding="utf-8") as f:
+                    f.write(note + "\n")
+            return redirect("/")  # redirect after save
+
+        elif action == "summarize":
+            if note:
+                summary = mock_summarize(note)
+            else:
+                summary = "Error: No text to summarize"
+
     return render_template("index.html", notes=notes, summary=summary)
 
 if __name__ == "__main__":
