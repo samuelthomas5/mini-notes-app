@@ -1,22 +1,31 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Mini Notes App</title>
-        <meta charset="UTF-8">
-    </head>
-    <body>
-        <h1>Student Notes</h1>
-        
-        <form method="POST">
-            <textarea name = "note"></textarea><br>
-            <button type = "submit">Add Note</button>
-        </form>
+<head>
+  <title>Smart Notes</title>
+</head>
+<body>
 
-        <h2>All Notes:</h2>
-        <ul>
-            {% for note in notes %}
-                <li>{{ note }}</li>
-            {% endfor %}
-        </ul>
-    </body>
+<h1>Student Notes</h1>
+
+<form method="POST">
+    <textarea name="note" rows="4" cols="50"></textarea><br><br>
+    <button type="submit" name="action" value="save">Save Note</button>
+    <button type="submit" name="action" value="summarize">Summarize</button>
+</form>
+
+<hr>
+
+{% if summary %}
+  <h2>AI Summary</h2>
+  <p>{{ summary }}</p>
+{% endif %}
+
+<h2>Saved Notes</h2>
+<ul>
+  {% for note in notes %}
+    <li>{{ note }}</li>
+  {% endfor %}
+</ul>
+
+</body>
 </html>
