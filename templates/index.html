@@ -11,4 +11,12 @@
             <textarea name = "note"></textarea><br>
             <button type = "submit">Add Note</button>
         </form>
+
+        <h2>All Notes:</h2>
+        <ul>
+            {% for note in notes %}
+                <li>{{ note }}</li>
+            {% endfor %}
+        </ul>
+    </body>
 </html>
